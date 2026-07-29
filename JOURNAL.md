@@ -50,3 +50,49 @@ crashes the faithfulness evaluation exactly as issue #153 describes.
 None blocking. Open question for Week 9: whether to coerce `None` with
 `chunk.get("text") or ""` (simplest) vs. an explicit `is not None` check, and
 whether to add a mixed None/valid multi-chunk test to strengthen coverage.
+
+## Week 9 — Implementation & PR submission
+
+### Mid-week check-in
+
+**Progress:**
+Implemented the fix in `rag/evaluator/faithfulness_checker.py`: the context
+concatenation now uses `chunk.get("text") or ""`, so a chunk whose `text` is
+`None` (or missing) is coerced to an empty string before `" ".join(...)`. Added
+two edge-case tests following the existing patterns in
+`tests/unit/test_faithfulness_checker.py`: `test_none_text_mixed_with_valid_chunks`
+(a `None` chunk must not discard valid sibling chunks) and
+`test_all_chunks_none_text` (all-`None` context returns a valid float, no crash).
+
+**Verification:** `test_none_context_chunk_text` now passes, as do the two new
+tests. The faithfulness module went from 18 passed / 4 failed to 21 passed /
+3 failed.
+
+**Scoping note (honest self-assessment):** The 3 still-failing tests
+(`test_partial_support_returns_middle_score`, `test_multiple_context_chunks`,
+`test_multiple_claims_varying_support`) are **pre-existing and unrelated** to
+issue #153 — they fail because of the scoring threshold in `_is_supported`
+(requires 2+ meaningful token overlaps), not the `None` crash. They fail on the
+base branch before my change, so I am intentionally leaving them out of scope.
+Likewise, CI runs `black --check .` and `ruff check .` repo-wide, and the
+existing codebase is not black-formatted, so those jobs are already red on
+`main`. I kept my diff minimal and matched the file's existing style rather than
+reformatting unrelated code.
+
+### Submission check-in
+
+**PR link:** [REPLACE_WITH_PR_URL]
+
+**What I built:** A scoped fix for issue #153 plus two edge-case tests and inline
+documentation explaining why `None` text is coerced to `""`.
+
+**Files changed:**
+- `rag/evaluator/faithfulness_checker.py` — coerce `None`/missing text to `""`
+- `tests/unit/test_faithfulness_checker.py` — two new edge-case tests
+
+**How to test:**
+`python -m pytest tests/unit/test_faithfulness_checker.py -k "none" -v`
+
+**Blockers or open questions:**
+None. Pre-existing scoring failures and repo-wide formatting are documented above
+as out of scope for this issue.
