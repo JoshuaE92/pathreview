@@ -29,3 +29,24 @@ failing test are all named in the issue, so scope is clear and small — a
 one-line-ish fix in a single file plus verifying one existing test. It needs no
 Chroma or external services to reproduce or fix, which keeps the setup burden
 low. Good first contribution to a large codebase.
+
+## Week 8 — Reproduction & solution planning
+
+**Reproduction commit link:** https://github.com/JoshuaE92/pathreview/commit/de20ceda92dadedcfc158a06bfb31164387594b6
+
+**Reproduction summary:**
+I ran the existing failing test with
+`python -m pytest tests/unit/test_faithfulness_checker.py::TestFaithfulnessChecker::test_none_context_chunk_text -v`.
+It fails at `rag/evaluator/faithfulness_checker.py:34` with
+`TypeError: sequence item 0: expected str instance, NoneType found`, confirming
+that a context chunk with `text: None` reaches `" ".join(...)` as `None` and
+crashes the faithfulness evaluation exactly as issue #153 describes.
+
+**PLAN.md link:** https://github.com/JoshuaE92/pathreview/blob/fix/153-faithfulness-checker-none-text/PLAN.md
+
+**Walkthrough video (recommended):** [optional — add Loom link if recorded]
+
+**Blockers or open questions:**
+None blocking. Open question for Week 9: whether to coerce `None` with
+`chunk.get("text") or ""` (simplest) vs. an explicit `is not None` check, and
+whether to add a mixed None/valid multi-chunk test to strengthen coverage.
