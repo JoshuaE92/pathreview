@@ -81,7 +81,7 @@ reformatting unrelated code.
 
 ### Submission check-in
 
-**PR link:** [REPLACE_WITH_PR_URL]
+**PR link:** https://github.com/ascherj/pathreview/pull/854
 
 **What I built:** A scoped fix for issue #153 plus two edge-case tests and inline
 documentation explaining why `None` text is coerced to `""`.
