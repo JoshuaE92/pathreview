@@ -104,3 +104,72 @@ one — `test_none_context_chunk_text` — see the scoping note in the mid-week 
 **Blockers or open questions:**
 None. Pre-existing scoring failures and repo-wide formatting are documented above
 as out of scope for this issue.
+
+## Week 10 — Iteration & reflection
+
+### Reviewer feedback
+
+**Feedback received:** [ ] Yes  [x] No — still awaiting review
+
+**Summary of feedback:**
+No reviewer or maintainer comments came in. PR #854 remained open with no review
+comments, review threads, or requested changes through the end of the week. (Per
+the Summer 2026 cohort guidance, peer/maintainer review was not a required part of
+the process this term.)
+
+**How you responded:**
+No feedback to respond to. I did a final self-review of the diff before the deadline
+to confirm it was still minimal and correctly scoped.
+
+---
+
+### Reflection
+
+**What was harder than you expected?**
+The hardest part wasn't the fix — it was everything around it. The one-line change
+(`chunk.get("text", "")` → `chunk.get("text") or ""`) was clear from the issue. What
+surprised me was the ambiguity of "does the build pass?" in a real repo: `make check`
+was already red repo-wide because the existing code isn't `black`/`ruff` formatted,
+and three scoring tests in the same module fail on `main` for reasons unrelated to my
+bug. Figuring out which failures were mine versus pre-existing, and being able to
+prove it, took more care than writing the fix. The upstream repo had also been renamed
+(`jamjamgobambam` → `ascherj`), so even pointing my remotes and PR at the right target
+was a small investigation.
+
+**What did you learn about working in a large codebase?**
+Contributing to someone else's production code is mostly about restraint. On my own
+project I'd have "cleaned up" the formatting and maybe touched the scoring logic while
+I was in there. Here, the right move was the opposite: keep the diff to exactly what
+issue #153 needed, match the file's existing style instead of reformatting, and
+document the pre-existing failures rather than silently absorbing them into my PR.
+I also learned to read the *tests* to understand expected behavior — the existing
+`test_none_context_chunk_text` told me precisely what a correct fix looked like before
+I wrote a line. Scope discipline and being able to defend "this is out of scope" turned
+out to be the real skills.
+
+**How did AI tools help — and where did they fall short?**
+AI was most useful for navigation and verification: exploring an unfamiliar codebase,
+discovering the repo had moved, confirming via the GitHub API that no PR existed yet,
+distinguishing my test results from pre-existing failures, and drafting the PR
+description and journal entries against the templates. Where it fell short was
+judgment: deciding *which* fix idiom to use, deciding what to leave out of scope, and
+confirming the honest framing of "passes = no new failures." It also can't do the
+parts that are actually mine to own — opening the PR, marking it ready, and submitting
+the branch URL to the portal. AI accelerated the mechanical work; the decisions still
+had to be mine.
+
+**What would you do differently if you started over?**
+I'd open the draft PR earlier in the week instead of near the deadline, so the "PR is
+live" step wasn't the last thing standing between me and being done. I'd also verify
+the canonical upstream repo up front rather than discovering the rename mid-process,
+and I'd keep my working tree clean from the start — a couple of stray files (`=0.29.0`,
+a `package-lock.json` change) crept in and had to be stashed out before the PR so they
+wouldn't leak in.
+
+**What are you most proud of from this module?**
+Not the fix itself, but the honesty of the submission. Instead of checking every box
+and pretending a red repo was green, I documented exactly which failures pre-existed,
+proved my change removed one failure and added none, and kept the diff small enough
+that a reviewer could verify it in under a minute. Learning to make a clean, defensible,
+tightly-scoped contribution to a codebase I didn't write is the thing I'll actually
+carry forward.
