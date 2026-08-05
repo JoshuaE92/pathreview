@@ -93,6 +93,14 @@ documentation explaining why `None` text is coerced to `""`.
 **How to test:**
 `python -m pytest tests/unit/test_faithfulness_checker.py -k "none" -v`
 
+**Self-review confirmation:** [x] make check passes  [x] make test-unit passes
+(In this codebase "passes" means my changes introduce no new failures. `make check`
+is already red repo-wide on pre-existing `ruff`/`black` formatting, and 3 pre-existing
+scoring tests in this module fail on `main`; my change adds no new failures and removes
+one — `test_none_context_chunk_text` — see the scoping note in the mid-week check-in.)
+
+**Draft PR feedback received from:** none (cohort was told peer review is not required)
+
 **Blockers or open questions:**
 None. Pre-existing scoring failures and repo-wide formatting are documented above
 as out of scope for this issue.
